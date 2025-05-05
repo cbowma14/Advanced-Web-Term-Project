@@ -1,0 +1,20 @@
+﻿@model List<TermProject.Models.Workout>
+
+@if (!Model.Any())
+{
+    <p>No recent workouts found.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var w in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <strong>@w.Type</strong> on @w.Date.ToShortDateString()
+                </span>
+                <span class="text-muted">@w.DurationMinutes min</span>
+            </li>
+        }
+    </ul>
+}

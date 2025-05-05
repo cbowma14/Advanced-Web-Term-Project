@@ -1,0 +1,98 @@
+﻿@model TermProject.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container py-4">
+    <h1 class="mb-4 text-center">Welcome to Your Fitness Dashboard</h1>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-primary h-100" aria-label="Total Workouts">
+                <div class="card-body">
+                    <h5 class="card-title">Workouts</h5>
+                    <p class="display-6">@Model.TotalWorkouts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-success h-100" aria-label="Calories Burned">
+                <div class="card-body">
+                    <h5 class="card-title">Calories Burned</h5>
+                    <p class="display-6">@Model.TotalCaloriesBurned</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-warning h-100" aria-label="Active Goals">
+                <div class="card-body">
+                    <h5 class="card-title">Active Goals</h5>
+                    <p class="display-6">@Model.ActiveGoals.Count</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Workouts -->
+    <section aria-labelledby="workouts-header">
+        <h2 id="workouts-header" class="h4 mt-5">Recent Workouts</h2>
+        <div id="recent-workouts-wrapper">
+            @await Html.PartialAsync("_RecentWorkoutsPartial", Model.RecentWorkouts)
+        </div>
+    </section>
+
+    <!-- Active Goals -->
+    <section aria-labelledby="goals-header">
+        <h2 id="goals-header" class="h4 mt-5">Active Goals</h2>
+        @if (!Model.ActiveGoals.Any())
+        {
+            <p>No active goals at the moment.</p>
+        }
+        else
+        {
+            <ul class="list-group" id="active-goals">
+                @foreach (var g in Model.ActiveGoals)
+                {
+                    <li class="list-group-item">
+                        <strong>@g.Description</strong> by @g.Deadline.ToShortDateString()
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+
+    <!-- Latest Progress Entries -->
+    <section aria-labelledby="progress-header">
+        <h2 id="progress-header" class="h4 mt-5">Latest Progress Entries</h2>
+        <div id="progress-table-wrapper">
+            @await Html.PartialAsync("_ProgressTablePartial", Model.LatestProgressEntries)
+        </div>
+    </section>
+     
+</div>
+
+@section Scripts {
+    @{
+        <script>
+            async function refreshProgressTable() {
+                const response = await fetch('/Dashboard/ProgressTablePartial');
+                const html = await response.text();
+                document.getElementById('progress-table-wrapper').innerHTML = html;
+            }
+
+            setInterval(refreshProgressTable, 30000);
+        </script>
+
+
+        <script>
+            async function refreshWorkouts() {
+                const response = await fetch('/Dashboard/RecentWorkoutsPartial');
+                const html = await response.text();
+                document.getElementById('recent-workouts-wrapper').innerHTML = html;
+            }
+
+            setInterval(refreshWorkouts, 30000); // Optional: refresh every 30s
+        </script>
+    }
+}

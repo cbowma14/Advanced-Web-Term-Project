@@ -1,0 +1,76 @@
+﻿@model List<Exercise>
+@{
+    ViewData["Title"] = "Exercise Library";
+    var categories = ViewBag.Categories as List<string>;
+    var muscleGroups = ViewBag.MuscleGroups as List<string>;
+    var equipments = ViewBag.Equipments as List<string>;
+}
+
+<h2>Exercise Library</h2>
+
+<form method="get" class="row mb-4">
+    <div class="col-md-3">
+        <label>Category</label>
+        <select name="category" class="form-select">
+            <option value="">All</option>
+            @foreach (var item in categories!)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label>Muscle Group</label>
+        <select name="muscleGroup" class="form-select">
+            <option value="">All</option>
+            @foreach (var item in muscleGroups!)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label>Equipment</label>
+        <select name="equipment" class="form-select">
+            <option value="">All</option>
+            @foreach (var item in equipments!)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+<form method="post" asp-controller="Workout" asp-action="CreateFromSelection">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Muscle Group</th>
+                <th>Equipment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exercise in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selectedExerciseIds" value="@exercise.Id" />
+                    </td>
+                    <td>@exercise.Name</td>
+                    <td>@exercise.Category</td>
+                    <td>@exercise.MuscleGroup</td>
+                    <td>@exercise.Equipment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

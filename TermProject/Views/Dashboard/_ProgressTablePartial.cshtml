@@ -1,0 +1,32 @@
+﻿@model List<TermProject.Models.ProgressEntry>
+
+@if (!Model.Any())
+{
+    <p>No progress data logged.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Weight</th>
+                <th>BMI</th>
+                <th>Body Fat %</th>
+                <th>Muscle Mass</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in Model)
+            {
+                <tr>
+                    <td>@entry.Date.ToShortDateString()</td>
+                    <td>@entry.Weight</td>
+                    <td>@entry.BMI</td>
+                    <td>@entry.BodyFatPercentage</td>
+                    <td>@entry.MuscleMass</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

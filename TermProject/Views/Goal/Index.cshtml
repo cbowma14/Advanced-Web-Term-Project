@@ -1,0 +1,49 @@
+﻿@model IEnumerable<TermProject.Models.Goal>
+@{
+    ViewData["Title"] = "My Goals";
+}
+
+<h2>My Goals</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Add New Goal</a>
+
+@if (!Model.Any())
+{
+    <p>No goals found. Start by creating one!</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var goal in Model)
+            {
+                <tr>
+                    <td>@goal.Description</td>
+                    <td>@goal.Deadline.ToShortDateString()</td>
+                    <td>
+                        @if (goal.IsCompleted)
+                        {
+                            <span class="badge bg-success">Achieved</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">In Progress</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@goal.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@goal.Id" class="btn btn-sm btn-outline-danger ms-2">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

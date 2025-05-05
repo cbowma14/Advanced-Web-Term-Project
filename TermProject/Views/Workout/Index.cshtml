@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TermProject.Models.Workout>
+
+@{
+    ViewData["Title"] = "My Workouts";
+}
+
+<h2>My Workouts</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">Log New Workout</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Duration</th>
+            <th>Exercises</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var w in Model)
+        {
+            <tr>
+                <td>@w.Date.ToShortDateString()</td>
+                <td>@w.Type</td>
+                <td>@w.DurationMinutes minutes</td>
+                <td>
+                    @if (w.WorkoutExercises != null && w.WorkoutExercises.Any())
+                    {
+                        <ul>
+                            @foreach (var we in w.WorkoutExercises)
+                            {
+                                <li>@we.Exercise?.Name (@we.Sets x @we.Reps, @we.WeightKg kg)</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <em>No exercises</em>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

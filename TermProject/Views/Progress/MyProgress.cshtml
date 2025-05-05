@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "My Progress";
+}
+
+<h2>My Progress</h2>
+
+<a asp-controller="Progress" asp-action="Add" class="btn btn-outline-primary mb-4">
+    Add Progress Entry
+</a>
+
+<canvas id="weightChart" height="100"></canvas>
+<canvas id="bmiChart" height="100" class="mt-4"></canvas>
+<canvas id="bodyFatChart" height="100" class="mt-4"></canvas>
+<canvas id="muscleMassChart" height="100" class="mt-4"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function fetchDataAndDrawCharts() {
+            const response = await fetch('/api/ProgressApi');
+            const data = await response.json();
+
+            const labels = data.map(p => new Date(p.date).toLocaleDateString());
+
+            const weight = data.map(p => p.weightKg);
+            const bmi = data.map(p => p.bmi);
+            const bodyFat = data.map(p => p.bodyFatPercentage);
+            const muscleMass = data.map(p => p.muscleMassPercentage);
+
+            const config = (label, data, borderColor) => ({
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: borderColor,
+                        fill: false,
+                        tension: 0.3
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById('weightChart'), config('Weight (kg)', weight, 'blue'));
+            new Chart(document.getElementById('bmiChart'), config('BMI', bmi, 'green'));
+            new Chart(document.getElementById('bodyFatChart'), config('Body Fat %', bodyFat, 'red'));
+            new Chart(document.getElementById('muscleMassChart'), config('Muscle Mass %', muscleMass, 'orange'));
+        }
+
+        fetchDataAndDrawCharts();
+    </script>
+}

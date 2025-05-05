@@ -1,0 +1,68 @@
+﻿@model TermProject.ViewModels.WorkoutFormViewModel
+@{
+    ViewData["Title"] = "Create Workout";
+    var exercises = ViewBag.Exercises as List<TermProject.Models.Exercise> ?? new();
+}
+
+<h2>Create Workout</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Workout.Date"></label>
+        <input asp-for="Workout.Date" class="form-control" type="date" />
+        <span asp-validation-for="Workout.Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Workout.Type"></label>
+        <input asp-for="Workout.Type" class="form-control" />
+        <span asp-validation-for="Workout.Type" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Workout.DurationMinutes"></label>
+        <input asp-for="Workout.DurationMinutes" class="form-control" />
+        <span asp-validation-for="Workout.DurationMinutes" class="text-danger"></span>
+    </div>
+
+    <hr />
+    <h4>Exercises</h4>
+
+    @for (int i = 0; i < exercises.Count; i++)
+    {
+        <div class="border p-3 mb-3">
+            <input type="hidden" name="WorkoutExercises[@i].ExerciseId" value="@exercises[i].Id" />
+            <input type="hidden" name="WorkoutExercises[@i].IsSelected" value="false" />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" name="WorkoutExercises[@i].IsSelected" value="true" />
+                <label class="form-check-label">@exercises[i].Name (@exercises[i].MuscleGroup)</label>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Sets</label>
+                    <input type="number" class="form-control" name="WorkoutExercises[@i].Sets" value="3" />
+                </div>
+                <div class="col-md-4">
+                    <label>Reps</label>
+                    <input type="number" class="form-control" name="WorkoutExercises[@i].Reps" value="10" />
+                </div>
+                <div class="col-md-4">
+                    <label>Weight (kg)</label>
+                    <input type="number" class="form-control" name="WorkoutExercises[@i].WeightKg" value="0" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Save Workout</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

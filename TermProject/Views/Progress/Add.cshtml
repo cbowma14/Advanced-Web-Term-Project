@@ -1,0 +1,67 @@
+﻿@model TermProject.Models.ProgressEntry
+@{
+    ViewData["Title"] = "Add Progress Entry";
+}
+
+<h2>Add Progress Entry</h2>
+
+<form id="progressForm" asp-action="Add" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Date"></label>
+        <input asp-for="Date" class="form-control" type="date" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Weight"></label>
+        <input asp-for="Weight" class="form-control" step="0.1" />
+        <span asp-validation-for="Weight" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BMI"></label>
+        <input asp-for="BMI" class="form-control" step="0.1" />
+        <span asp-validation-for="BMI" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BodyFatPercentage"></label>
+        <input asp-for="BodyFatPercentage" class="form-control" step="0.1" />
+        <span asp-validation-for="BodyFatPercentage" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MuscleMass"></label>
+        <input asp-for="MuscleMass" class="form-control" step="0.1" />
+        <span asp-validation-for="MuscleMass" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save Entry</button>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById('progressForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            const response = await fetch('/Progress/Add', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Progress saved!");
+                form.reset();
+                await refreshProgressTable(); // live update
+            } else {
+                const html = await response.text();
+                document.body.innerHTML = html; // fallback full render with errors
+            }
+        });
+    </script>
+}
